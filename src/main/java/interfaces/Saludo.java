@@ -9,85 +9,85 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 /**
  *
  * @author Cris
  */
 public class Saludo extends JPanel implements ActionListener {
-    
-    private JButton botonSaludar, botonDespedir;
+
+    private Random random = new Random();
+    private JLabel numero;
+    private JButton botonSaludar, botonDespedir, botonAleatorio;
     private JTextArea texto;
-    
+
     public Saludo() {
         initComponents();
     }
-    
+
     private void initComponents() {
-        
+
         botonSaludar = new JButton("Nombre");
         botonDespedir = new JButton("Apellidos");
+        botonAleatorio = new JButton("Generar Aleatorio");
+        numero = new JLabel("Número");
         texto = new JTextArea(1, 25);
         texto.setBackground(Color.ORANGE);
-        
-        this.setLayout(new FlowLayout());
-        
-        this.add(botonSaludar);
-        this.add(texto);
-        // Añadimos el botón al panel
-        this.add(botonDespedir);
-        // Controlador del evento
-        botonDespedir.addActionListener(this);
 
-// Se le indica al objeto boton que escuche eventos tipo click
-// y se pasa como argumento una referencia de tipo ActionListener
-// En este caso se pasa this que es el panel sobre el 
-// que está el botón y que implementa la interfaz ActionListener
-        //botonSaludar.addActionListener(this);
-        // Clase anónima (sin nombre) anidada (dentro de un método)
-        botonSaludar.addActionListener(new ActionListener() {
+        this.setLayout(new FlowLayout());
+
+        //El orden en el que se añade es como aparecerá en el panel
+        this.add(botonSaludar);
+        this.add(botonDespedir);
+        // Añadimos el botón al panel
+        this.add(botonAleatorio);
+        this.add(numero);
+        this.add(texto);
+
+        // Controlador del evento
+        botonSaludar.addActionListener(this);
+        botonDespedir.addActionListener(this);
+        botonAleatorio.addActionListener(this);
+        botonAleatorio.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                texto.setText("Cristina");
-                texto.setBackground(Color.white);
+            public void mouseEntered(MouseEvent arg0) {
+                botonAleatorio.setBackground((Color.PINK));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                botonAleatorio.setBackground(UIManager.getColor("control"));
             }
         });
-        botonDespedir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                texto.setText("Jiménez Fernández");
-                texto.setBackground(Color.blue);
-            }
-        });
-        botonDespedir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                botonDespedirActionPerformed(e);
-            }
-            
-            private void botonDespedirActionPerformed(ActionEvent e) {
-                //Código a ejecutar
-            }
-        });
-        
+
     }
 
     // Sobrescribimos el método de la interfaz
+    @Override
     public void actionPerformed(ActionEvent ae) {
-        // Este ejemplo es tan básico que no hemos usado el objeto ae
-        // Indicamos el texto que queremos mostrar en el área de texto
-        //texto.setText("Hola amigos!!");
         // Si el botón pulsado es botonSaludar
         if (ae.getSource() == botonSaludar) {
             texto.setText("Cristina");
-        } else {
+            texto.setBackground(Color.white);
+        } else if (ae.getSource() == botonDespedir) {
             texto.setText("Jiménez Fernández");
+            texto.setBackground(Color.blue);
+        } else if (ae.getSource() == botonAleatorio) {
+            int numRandom = random.nextInt(11);
+            numero.setText(String.valueOf(numRandom));
         }
     }
+
     public static void main(String[] args) {
         // Construimos la ventana
         JFrame frame = new JFrame("App");
@@ -105,5 +105,4 @@ public class Saludo extends JPanel implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
-    
 }
